@@ -1,0 +1,16 @@
+* {
+  font-family: "Open Sans", sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none; /* Прибирає підкреслення */
+  color: #D35400; /* Задає помаранчевий колір */
+}
+
+a:hover {
+  text-decoration: underline; /* Додає підкреслення при наведенні */
+  color: #993D00; /* Зміна кольору при наведенні */
+}
