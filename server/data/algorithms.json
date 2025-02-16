@@ -1,0 +1,32 @@
+[
+  {
+    "id": "numbers_converter",
+    "title": "Конвертор чисел",
+    "description": "Приклад переведення чисел з однієї системи числення в іншу",
+    "image": "/images/algorithms/numbers_converter.png"
+  },
+  {
+    "id": "int_representation",
+    "title": "Представлення int 32bit",
+    "description": "Тут ви можете побачити, як представлено цілі числа в пам'ятію. Фіксована довжина 32bit",
+    "image": "/images/algorithms/int_representation.png"
+  },
+  {
+    "id": "unsigned_representation",
+    "title": "Представлення unsigned int 32bit",
+    "description": "Тут ви можете побачити, як представлено цілі беззнакові числа в пам'ятію. Фіксована довжина 32bit",
+    "image": "/images/algorithms/unsigned_representation.png"
+  },
+  {
+    "id": "float_representation",
+    "title": "Перетворення числа в 32-бітне число з плаваючою комою",
+    "description": "Тут ви можете побачити, як представлено число з плаваючою комою в пам'ятію. Фіксована довжина 32bit",
+    "image": "/images/algorithms/float_representation.png"
+  },
+  {
+    "id": "double_representation",
+    "title": "Перетворення числа в 64-бітне число з плаваючою комою",
+    "description": "Тут ви можете побачити, як представлено число з плаваючою комою в пам'ятію. Фіксована довжина 64bit",
+    "image": "/images/algorithms/double_representation.png"
+  }
+]

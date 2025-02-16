@@ -1,6 +1,5 @@
 <script setup>
 const { data: news, error } = await useFetch('/api/news');
-console.log("news: ", news)
 </script>
 
 <template>
