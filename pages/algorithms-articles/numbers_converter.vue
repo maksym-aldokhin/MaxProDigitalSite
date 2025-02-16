@@ -1,12 +1,12 @@
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue';
+import { ref, onMounted } from 'vue';
 
-const inputNumber = ref(localStorage.getItem('inputNumber') || '');
+const inputNumber = ref('');
 const inputNumberOutput = ref('');
-const fromBase = ref(Number(localStorage.getItem('fromBase')) || 10);
-const toBase = ref(Number(localStorage.getItem('toBase')) || 2);
-const bitMode = ref(localStorage.getItem('bitMode') || 'auto');
-const bitSize = ref(Number(localStorage.getItem('bitSize')) || 4);
+const fromBase = ref(10);
+const toBase = ref(2);
+const bitMode = ref('auto');
+const bitSize = ref(4);
 const steps = ref([]);
 const result = ref('');
 const errorMessage = ref('');
@@ -17,6 +17,14 @@ const bases = [
   { value: 10, label: 'Decimal (10)' },
   { value: 16, label: 'Hexadecimal (16)' }
 ];
+
+onMounted(() => {
+  inputNumber.value = localStorage.getItem('inputNumber') || '';
+  fromBase.value = Number(localStorage.getItem('fromBase')) || 10;
+  toBase.value = Number(localStorage.getItem('toBase')) || 2;
+  bitMode.value = localStorage.getItem('bitMode') || 'auto';
+  bitSize.value = Number(localStorage.getItem('bitSize')) || 4;
+});
 
 const validateInput = () => {
   errorMessage.value = '';
@@ -46,6 +54,7 @@ const saveToLocalStorage = () => {
   localStorage.setItem('bitMode', bitMode.value);
   localStorage.setItem('bitSize', bitSize.value);
 };
+
 const convertNumber = () => {
   if (!validateInput()) return;
   inputNumberOutput.value = formatNumber(inputNumber.value, fromBase.value);
@@ -58,7 +67,6 @@ const convertNumber = () => {
     if (toBase.value === 10) {
       calculateStepsToDec(inputNumber.value, fromBase.value, decimalValue);
       result.value = decimalValue;
-      // steps.value.push({ text: `Decimal value: ${decimalValue}`, value: decimalValue });
     } else {
       if (fromBase.value === 2 && toBase.value === 16) {
         binToHex(inputNumber.value);
@@ -66,9 +74,9 @@ const convertNumber = () => {
         binToOct(inputNumber.value);
       } else if (fromBase.value === 8 && toBase.value === 2) {
         octToBin(inputNumber.value);
-      }  else if (fromBase.value === 8 && toBase.value === 16) {
+      } else if (fromBase.value === 8 && toBase.value === 16) {
         octToHex(inputNumber.value);
-      }  else if (fromBase.value === 16 && toBase.value === 2) {
+      } else if (fromBase.value === 16 && toBase.value === 2) {
         hexToBin(inputNumber.value);
       } else if (fromBase.value === 16 && toBase.value === 8) {
         hexToOct(inputNumber.value);
@@ -112,7 +120,7 @@ const binToHex = (binaryStr) => {
     let binChunk = paddedBinary.slice(i, i + 4);
     let afterNumber = paddedBinary.slice(i + 4, paddedBinary.length);
     let hexDigit = parseInt(binChunk, 2).toString(16).toUpperCase();
-    steps.value.push(`${beforeNumber} *${binChunk}* ${afterNumber} → ${hexResult} *${hexDigit}*`);
+    steps.value.push(`${beforeNumber} <span style="color: #D35400; font-weight: bold;">${binChunk}</span> ${afterNumber} → ${hexResult} <span style="color: #D35400; font-weight: bold;">${hexDigit}</span>`);
     hexResult += hexDigit;
   }
   return hexResult;
@@ -127,7 +135,7 @@ const binToOct = (binaryStr) => {
     let binChunk = paddedBinary.slice(i, i + 3);
     let afterNumber = paddedBinary.slice(i + 3, paddedBinary.length);
     let octDigit = parseInt(binChunk, 2).toString(8);
-    steps.value.push(`${beforeNumber} *${binChunk}* ${afterNumber} → ${octResult} *${octDigit}*`);
+    steps.value.push(`${beforeNumber} <span style="color: #D35400; font-weight: bold;">${binChunk}</span> ${afterNumber} → ${octResult} <span style="color: #D35400; font-weight: bold;">${octDigit}</span>`);
     octResult += octDigit;
   }
   return octResult;
@@ -148,7 +156,7 @@ const hexToBin = (hexStr) => {
     let hexDigit = hexStr[i];
     let afterNumber = hexStr.slice(i + 1);
     let binChunk = parseInt(hexDigit, 16).toString(2).padStart(4, '0');
-    steps.value.push(`${beforeNumber} *${hexDigit}* ${afterNumber} → ${binaryResult} *${binChunk}*`);
+    steps.value.push(`${beforeNumber} <span style="color: #D35400; font-weight: bold;">${hexDigit}</span> ${afterNumber} → ${binaryResult} <span style="color: #D35400; font-weight: bold;">${binChunk}</span>`);
     binaryResult += binChunk;
   }
   return binaryResult;
@@ -162,7 +170,7 @@ const octToBin = (octalStr) => {
     let octDigit = octalStr[i];
     let afterNumber = octalStr.slice(i + 1);
     let binChunk = parseInt(octDigit, 8).toString(2).padStart(3, '0');
-    steps.value.push(`${beforeNumber} *${octDigit}* ${afterNumber} → ${binaryResult} *${binChunk}*`);
+    steps.value.push(`${beforeNumber} <span style="color: #D35400; font-weight: bold;">${octDigit}</span> ${afterNumber} → ${binaryResult} <span style="color: #D35400; font-weight: bold;">${binChunk}</span>`);
     binaryResult += binChunk;
   }
   return binaryResult;
@@ -314,7 +322,7 @@ const drawLines = () => {
       <div v-if="steps.length">
         <h3 class="text-md font-semibold mt-2">Розрахунок:</h3>
         <ol class="list-disc pl-5">
-          <li v-for="(step, index) in steps" :key="index">{{ step }}</li>
+          <li v-for="(step, index) in steps" :key="index" v-html="step"></li>
         </ol>
       </div>
       <h2>Результат: <span id="result-number">{{ result }}</span></h2>
