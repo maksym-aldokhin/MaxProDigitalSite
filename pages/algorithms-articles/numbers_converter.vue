@@ -57,10 +57,11 @@ const saveToLocalStorage = () => {
 
 const convertNumber = () => {
   if (!validateInput()) return;
-  inputNumberOutput.value = formatNumber(inputNumber.value, fromBase.value);
 
   steps.value = [];
   try {
+    inputNumberOutput.value = formatNumber(inputNumber.value, fromBase.value);
+
     let decimalValue = parseInt(inputNumber.value, fromBase.value);
     if (isNaN(decimalValue)) throw new Error('Invalid number');
 
