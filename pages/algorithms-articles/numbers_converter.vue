@@ -232,29 +232,11 @@ const calculateSteps = (number, base) => {
 const calculateStepsToDec = (number, base, res) => {
   let stepResult = "";
 
-  if (base === 2) {
-    let numberStr = number.toString();
-    for (let i = 0; i < numberStr.length; i++) {
-      stepResult += `(${numberStr[i]} * 2 ^ ${numberStr.length - i - 1})`;
-      if (i < numberStr.length - 1) {
-        stepResult += ' + ';
-      }
-    }
-  } else if (base === 8) {
-    let numberStr = number.toString();
-    for (let i = 0; i < numberStr.length; i++) {
-      stepResult += `(${numberStr[i]} * 8 ^ ${numberStr.length - i - 1})`;
-      if (i < numberStr.length - 1) {
-        stepResult += ' + ';
-      }
-    }
-  } else if (base === 16) {
-    let numberStr = number.toString();
-    for (let i = 0; i < numberStr.length; i++) {
-      stepResult += `(${numberStr[i]} * 16 ^ ${numberStr.length - i - 1})`;
-      if (i < numberStr.length - 1) {
-        stepResult += ' + ';
-      }
+  let numberStr = number.toString();
+  for (let i = 0; i < numberStr.length; i++) {
+    stepResult += `(<span style="color: #D35400; font-weight: bold;">${numberStr[i]}</span> * ${base} ^ <span style="color: #007BFF; font-weight: bold;">${numberStr.length - i - 1}</span>)`;
+    if (i < numberStr.length - 1) {
+      stepResult += ' + ';
     }
   }
   stepResult += ` = ${res}`;
@@ -296,7 +278,7 @@ const drawLines = () => {
     <h1>Конвертор чисел</h1>
     <div class="input-section">
       <label>Введіть число:</label>
-      <input v-model="inputNumber" type="text" @input="saveToLocalStorage">
+      <input v-model="inputNumber" type="text" @input="saveToLocalStorage" v-on:keyup.enter="convertNumber">
     </div>
     <div class="select-section">
       <label>З системи:</label>
@@ -314,7 +296,7 @@ const drawLines = () => {
         <option value="auto">Автоматична</option>
         <option value="manual">Вручну</option>
       </select>
-      <input v-if="bitMode === 'manual'" v-model.number="bitSize" type="number" min="4" max="128" @input="saveToLocalStorage">
+      <input v-if="bitMode === 'manual'" v-model.number="bitSize" type="number" min="4" max="128" @input="saveToLocalStorage" v-on:keyup.enter="convertNumber">
     </div>
     <button @click="convertNumber">Конвертувати</button>
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
@@ -381,6 +363,8 @@ button:hover {
 .result-section {
   text-align: center;
   margin-top: 20px;
+  margin-left: 10%;
+  margin-right: 10%;
 }
 
 .step-item {
