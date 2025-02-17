@@ -18,4 +18,9 @@ export default defineNuxtConfig({
   gtag: {
     id: 'G-V42392F0DM'
   },
+  app: {
+    head: {
+      title: 'MaxProDigital'
+    }
+  },
 })
