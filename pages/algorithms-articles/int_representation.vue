@@ -3,13 +3,8 @@
     <h1>Перетворення числа в 32-бітне знакове</h1>
     <div class="input-section">
       <label for="decimal-input">Введіть число (Decimal):</label>
-      <input
-        id="decimal-input"
-        type="text"
-        v-model="decimalInput"
-        @input="updateMemoryRepresentation"
-        placeholder="Введіть ціле число"
-      />
+      <input id="decimal-input" type="text" v-model="decimalInput" @input="updateMemoryRepresentation"
+        placeholder="Введіть ціле число" />
     </div>
 
     <div v-if="errorMessage" class="error-message">
@@ -24,7 +19,8 @@
     </div>
     <div class="memory-representation" v-if="memoryRepresentationBlocks">
       <div class="memory-cell">
-        <strong>Знак:</strong> {{ memoryRepresentationBlocks.sign }} ({{ memoryRepresentationBlocks.sign === '0' ? '+' : '-' }})
+        <strong>Знак:</strong> {{ memoryRepresentationBlocks.sign }} ({{ memoryRepresentationBlocks.sign === '0' ? '+' :
+        '-' }})
       </div>
       <div class="memory-cell">
         <strong>Дані:</strong> {{ memoryRepresentationBlocks.data }}
@@ -34,10 +30,12 @@
         <span class="data">{{ memoryRepresentationBlocks.data }}</span>
       </div>
     </div>
-    <div v-if="steps.length">
-      <h3 class="text-md font-semibold mt-2">Розрахунок:</h3>
-      <div class="list-disc pl-5">
-        <p v-for="(step, index) in steps" :key="index" v-html="step"></p>
+    <div class="result-section">
+      <div v-if="steps.length">
+        <h3 class="text-md font-semibold mt-2">Розрахунок:</h3>
+        <div class="list-disc pl-5">
+          <p v-for="(step, index) in steps" :key="index" v-html="step"></p>
+        </div>
       </div>
     </div>
   </div>
@@ -106,12 +104,12 @@ export default {
       let temp = Math.abs(number);
       let stepResults = [];
 
-      stepResults.push(`Переводимо в двійкову систему числення число ${temp}:`);
       while (temp > 0) {
         let remainder = temp % 2;
         stepResults.push(`<br>${temp} ÷ 2 = ${Math.floor(temp / 2)}, залишок = ${remainder}`);
         temp = Math.floor(temp / 2);
       }
+      stepResults.push(`Переводимо в двійкову систему числення число ${Math.abs(number)}:`);
       return stepResults.reverse();
     },
     calculateStepsToBinary(number) {
@@ -214,6 +212,11 @@ input {
 
 .memory-cell strong {
   color: #007BFF;
+}
+
+.result-section {
+  margin-left: 1%;
+  margin-right: 1%;
 }
 
 #svg-lines {

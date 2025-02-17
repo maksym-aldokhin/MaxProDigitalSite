@@ -24,7 +24,7 @@
     </div>
 
     <div class="memory-representation" v-if="memoryRepresentation">
-      <h3>Представлення числа в пам'яті (32 біт):</h3>
+      <h3>Представлення числа в пам'яті (64 біт):</h3>
       <div class="memory-cell">
         <strong>Знак:</strong> {{ memoryRepresentation.sign }} ({{ memoryRepresentation.sign === '0' ? '+' : '-' }})
       </div>
@@ -37,21 +37,21 @@
       <div class="binary-representation">
         <div>
           <div class="binary-title">Знак</div>
-          <span class="sign">{{ memoryRepresentation.sign }}</span>
+        <span class="sign">{{ memoryRepresentation.sign }}</span>
         </div>
         <div>
           <div class="binary-title">Експонента</div>
-          <span class="exponent">{{ memoryRepresentation.exponent }}</span>
+        <span class="exponent">{{ memoryRepresentation.exponent }}</span>
         </div>
         <div>
           <div class="binary-title">Мантіса</div>
-          <span class="mantissa">{{ memoryRepresentation.mantissa }}</span>
+        <span class="mantissa">{{ memoryRepresentation.mantissa }}</span>
         </div>
       </div>
       <div class="steps">
         <h3>Кроки перетворення:</h3>
-        <ul>
-          <li v-for="(step, index) in steps" :key="index">{{ step }}</li>
+        <ul style="margin-left: 1%;">
+          <p v-for="(step, index) in steps" :key="index" v-html="step"></p>
         </ul>
       </div>
     </div>
@@ -100,23 +100,75 @@ export default {
       const floatPattern = /^-?\d+(\.\d+)?$/;
       return floatPattern.test(value);
     },
+    calculateSteps(number) {
+      let temp = Math.abs(number);
+      let stepResults = [];
+
+      while (temp > 0) {
+        let remainder = temp % 2;
+        stepResults.push(`<br><span style="color: #007BFF; font-weight: bold;">${temp}</span> ÷ 2 = <span style="color: #007BFF; font-weight: bold;">${Math.floor(temp / 2)}</span>, записуємо ${remainder} `);
+        temp = Math.floor(temp / 2);
+      }
+      return stepResults.reverse();
+    },
+    calculateFractionalSteps(number) {
+      let temp = number - Math.floor(number);
+      let stepResults = [];
+      let count = 0;
+
+      while (temp > 0 && count < 52) {
+        let tempCaculation = temp * 2;
+        let bit = Math.floor(tempCaculation);
+        stepResults.push(`<br><span style="color: #007BFF; font-weight: bold;">${temp.toFixed(4)}</span> * 2 = <span style="color: #007BFF; font-weight: bold;">${bit}</span>. записуємо ${bit}`);
+        tempCaculation -= bit;
+        temp = tempCaculation;
+        count++;
+      }
+      return stepResults;
+    },
     toIEEE754(num) {
       this.steps = [];
+      if (num == 0) {
+        this.steps.push('Число є нулем, тому всі біти встановлені в 0.');
+        return '00000000000000000000000000000000';
+      }
       let sign = num < 0 ? 1 : 0;
-      this.steps.push(`Знаковий біт: ${sign}`);
+      let helpLog = num < 0 ? 'число від\'ємне' : 'число додатнє';
+      this.steps.push(`Знаковий біт: ${sign} оскільки ${helpLog}`);
+
+      let integerPart = Math.trunc(Math.abs(num));
+      this.steps.push(`<br>Приводимо цілу частину до бінарного виду <span style="color: #007BFF; font-weight: bold;">${integerPart}</span>:`);
+      this.steps.push(this.calculateSteps(integerPart));
+      this.steps.push(`Результат: <span style="color: #007BFF; font-weight: bold;">${integerPart.toString(2)}</span>`);
+      this.steps.push(`<br>`);
+
+      let fractionalPart = Math.abs(num) - integerPart;
+      this.steps.push(`<br>Приводимо дробну частину до бінарного виду <span style="color: #007BFF; font-weight: bold;">${fractionalPart}</span>:`);
+      this.steps.push(this.calculateFractionalSteps(fractionalPart));
+      this.steps.push(`Результат: <span style="color: #007BFF; font-weight: bold;">${fractionalPart.toString(2).slice(0, 54)}</span>`);
+      this.steps.push(`<br>`);
+
+      this.steps.push(`Ціла і дробна частина разом: <span style="color: #007BFF; font-weight: bold;">${integerPart.toString(2)},${fractionalPart.toString(2).slice(2, 54).padEnd(52, '0')}</span>`);
 
       num = Math.abs(num);
       let exponent = Math.floor(Math.log2(num));
-      this.steps.push(`Експонента (незміщена): ${exponent}`);
+      helpLog = exponent < 0 ? 'зсуваємо число ліворуч' : 'зсуваємо число праворуч';
+      this.steps.push(`Експонента (незміщена): <span style="color: #007BFF; font-weight: bold;">${exponent}</span> ${helpLog}`);
 
-      let mantissa = num / Math.pow(2, exponent) - 1;
-      this.steps.push(`Мантиса: ${mantissa}`);
+      let mantissa = num / Math.pow(2, exponent);
+      this.steps.push(`Мантиса з цілою частиною: <span style="color: #007BFF; font-weight: bold;">${mantissa.toString(2).slice(0, 54)}</span>`);
+      mantissa -= 1;
+      this.steps.push(`Мантиса: <span style="color: #007BFF; font-weight: bold;">${mantissa.toString(2).slice(2, 54)}</span>`);
 
+      this.steps.push(`Експонента (зміщена): 1023 + <span style="color: #007BFF; font-weight: bold;">${exponent}</span> = <span style="color: #007BFF; font-weight: bold;">${exponent + 1023}</span> (1023 - zerro offset)`);
       exponent += 1023; // Bias the exponent
-      this.steps.push(`Експонента (зміщена): ${exponent}`);
+
+      this.steps.push(`<br>Приводимо експоненту до бінарного виду <span style="color: #007BFF; font-weight: bold;">${exponent}</span>:`);
+      this.steps.push(this.calculateSteps(exponent));
 
       let exponentBits = exponent.toString(2).padStart(11, '0');
-      this.steps.push(`Біти експоненти: ${exponentBits}`);
+      this.steps.push(`Біти експоненти: <span style="color: #007BFF; font-weight: bold;">${exponentBits}</span>`);
+      this.steps.push(`<br>`);
 
       let mantissaBits = '';
       for (let i = 0; i < 52; i++) {
@@ -128,7 +180,7 @@ export default {
           mantissaBits += '0';
         }
       }
-      this.steps.push(`Біти мантіси: ${mantissaBits}`);
+      this.steps.push(`Біти мантіси: <span style="color: #007BFF; font-weight: bold;">${mantissaBits}</span>`);
 
       return `${sign}${exponentBits}${mantissaBits}`;
     },
@@ -221,22 +273,14 @@ input {
 }
 
 .sign {
-  padding: 5px;
   background-color: #ffcccc;
 }
 
 .exponent {
-  padding: 5px;
   background-color: #ccffcc;
 }
 
 .mantissa {
-  padding: 5px;
   background-color: #ccccff;
-}
-
-.binary-title {
-  text-align: center;
-  margin-bottom: 4px;
 }
 </style>
