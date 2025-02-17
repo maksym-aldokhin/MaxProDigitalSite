@@ -119,7 +119,7 @@ export default {
       while (temp > 0 && count < 52) {
         let tempCaculation = temp * 2;
         let bit = Math.floor(tempCaculation);
-        stepResults.push(`<br><span style="color: #007BFF; font-weight: bold;">${temp.toFixed(4)}</span> * 2 = <span style="color: #007BFF; font-weight: bold;">${bit}</span>. записуємо ${bit}`);
+        stepResults.push(`<br><span style="color: #007BFF; font-weight: bold;">${temp.toFixed(4)}</span> * 2 = ${tempCaculation.toFixed(4)} = (ціла частина) <span style="color: #007BFF; font-weight: bold;">${bit}</span> (дробова чатина для наступного розрахунку) ${fractionalPart.toFixed(4).toString().slice(2, 6)}. записуємо ${bit}`);
         tempCaculation -= bit;
         temp = tempCaculation;
         count++;
