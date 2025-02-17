@@ -14,12 +14,8 @@ export default defineNuxtConfig({
   css: [
     '~/assets/css/global.css',
   ],
-  modules: ['@nuxtjs/google-gtag'],
-  runtimeConfig: {
-    public: {
-      googleAnalytics: {
-        id: 'G-V42392F0DM'
-      }
-    }
+  modules: ['nuxt-gtag'],
+  gtag: {
+    id: 'G-V42392F0DM'
   },
 })
