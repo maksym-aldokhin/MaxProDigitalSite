@@ -6,6 +6,8 @@
       <NuxtLink to="/algorithms" class="link">Algorithms</NuxtLink>
       <span class="separator">|</span>
       <NuxtLink to="/about" class="link">About</NuxtLink>
+      <span class="separator">|</span>
+      <NuxtLink to="https://www.youtube.com/@maxprodigital" class="link">YouTube</NuxtLink>
     </nav>
   </header>
 </template>
@@ -22,6 +24,11 @@
 .nav {
   display: flex;
   justify-content: center;
+}
+
+.nav-right {
+  display: flex;
+  justify-content: right;
 }
 
 .link {

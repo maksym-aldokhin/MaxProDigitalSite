@@ -34,11 +34,12 @@ h1 {
   gap: 20px;
 }
 .algorithms-item {
-  border: 1px solid #ddd;
+  border: 1px solid #b9bdc7;
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 20px; /* Відступ між новинами */
   transition: transform 0.2s;
+  background: #f8f9fa;
 }
 .algorithms-item:hover {
   transform: scale(1.05);

@@ -285,6 +285,8 @@ const drawLines = () => {
       <select v-model="fromBase" @change="saveToLocalStorage">
         <option v-for="base in bases" :key="base.value" :value="base.value">{{ base.label }}</option>
       </select>
+    </div>
+    <div class="select-section">
       <label>В систему:</label>
       <select v-model="toBase" @change="saveToLocalStorage">
         <option v-for="base in bases" :key="base.value" :value="base.value">{{ base.label }}</option>
@@ -292,20 +294,26 @@ const drawLines = () => {
     </div>
     <div class="bit-section">
       <label>Бітність:</label>
-      <select v-model="bitMode" @change="saveToLocalStorage">
-        <option value="auto">Автоматична</option>
-        <option value="manual">Вручну</option>
-      </select>
-      <input v-if="bitMode === 'manual'" v-model.number="bitSize" type="number" min="4" max="128" @input="saveToLocalStorage" v-on:keyup.enter="convertNumber">
+      <div class="selector">
+        <select v-model="bitMode" @change="saveToLocalStorage">
+          <option value="auto">Автоматична</option>
+          <option value="manual">Вручну</option>
+        </select>
+      </div>
+      <div class="select-section">
+        <input v-if="bitMode === 'manual'" v-model.number="bitSize" type="number" min="4" max="128" @input="saveToLocalStorage" v-on:keyup.enter="convertNumber">
+      </div>
     </div>
-    <button @click="convertNumber">Конвертувати</button>
+    <div class="convert-button">
+      <button @click="convertNumber">Конвертувати</button>
+    </div>
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
     <div v-if="result" class="result-section">
       <h2>Вхідні дані: <span id="result-number">{{ inputNumberOutput }}</span></h2>
       <div v-if="steps.length">
         <h3 class="text-md font-semibold mt-2">Розрахунок:</h3>
         <ol class="list-disc pl-5">
-          <li v-for="(step, index) in steps" :key="index" v-html="step"></li>
+          <p v-for="(step, index) in steps" :key="index" v-html="step"></p>
         </ol>
       </div>
       <h2>Результат: <span id="result-number">{{ result }}</span></h2>
@@ -315,12 +323,12 @@ const drawLines = () => {
 
 <style scoped>
 .converter-container {
-  max-width: 80%;
+  /* max-width: 80%; */
   margin: auto;
   padding: 20px;
-  background: white;
+  /* background: white; */
   border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); */
 }
 
 h1 {
@@ -328,8 +336,12 @@ h1 {
   color: #007BFF;
 }
 
-.input-section, .select-section {
+.input-section, .select-section, .convert-button {
   margin-bottom: 15px;
+}
+
+.selector {
+  margin-bottom: 5px;
 }
 
 label {
