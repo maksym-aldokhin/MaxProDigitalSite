@@ -28,5 +28,11 @@
     "title": "Перетворення числа в 64-бітне число з плаваючою комою",
     "description": "Тут ви можете побачити, як представлено число з плаваючою комою в пам'ятію. Фіксована довжина 64bit",
     "image": "/images/algorithms/double_representation.png"
+  },
+  {
+    "id": "quick_sort",
+    "title": "Швидке сортування ",
+    "description": "Тут ви можете побачити, як працює швидке сортування для чисел",
+    "image": "/images/algorithms/quick_sort.png"
   }
 ]
