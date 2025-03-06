@@ -44,6 +44,7 @@ const partition = (arr, left, right, comparator) => {
       }
       from = i;
       to = j;
+      smallest = i
       let comment = "swap " + i.toString() + " and " + j.toString() + " (" + arr[i].toString() + " more then " + arr[j].toString() + ") <br>smallest element: " + i.toString();
       [arr[i], arr[j]] = [arr[j], arr[i]];
       // swaps.value.push([...arr]);
@@ -130,8 +131,11 @@ const saveToLocalStorage = () => {
                           'sorted': step.sorted,
                           'moving': idx === step.from || idx === step.to,
                           'smallest': idx === step.smallest}"
-                class="block" :style="{ width: Math.max(40, num.toString().length * 10) + 'px' }">{{ num }}</div>
+                class="block" :style="{ width: Math.max(40, num.toString().length * 10) + 'px' }">{{ num }}
+                <!-- <span class="index">{{ idx }}</span> -->
+              </div>
             <span class="tooltiptext" v-html="step.comment"></span>
+            <!-- -->
           </div>
           <!-- <b>{{ step.comment }}</b> -->
           <div class="comment-column" v-if="showComments" :style="{ width: Math.max(40, step.comment.toString().length * 10) + 'px' }" v-html="step.comment">
@@ -140,12 +144,34 @@ const saveToLocalStorage = () => {
       </div>
     </div>
   </div>
+  <div class="color-explanation">
+    <div class="color-item"><span class="color-box pivot"></span> Pivot</div>
+    <div class="color-item"><span class="color-box highlight"></span> Active Range</div>
+    <div class="color-item"><span class="color-box sorted"></span> Sorted</div>
+    <div class="color-item"><span class="color-box moving"></span> Moving</div>
+    <div class="color-item"><span class="color-box smallest"></span> Smallest</div>
+  </div>
 </template>
 
 <style scoped>
 .sort-container {
   text-align: center;
   padding: 20px;
+}
+
+.index {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  font-size: 10px;
+  color: #555;
+}
+
+.color-explanation {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  text-align: left;
 }
 
 .tooltip {
@@ -325,7 +351,7 @@ button {
 }
 
 .smallest {
-  background: #FE9EA2 !important;
+  border: 5px solid #ce181e !important;
 }
 
 .not-accent {
@@ -362,5 +388,17 @@ button {
   background: gray;
   border-radius: 5px;
   color: white;
+}
+
+.color-item {
+  margin-bottom: 5px;
+}
+
+.color-box {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  margin-right: 10px;
+  border-radius: 5px;
 }
 </style>
